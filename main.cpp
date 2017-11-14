@@ -137,5 +137,5 @@ void savePicture (vector <vector <Pixel> > bmp)
     Bitmap image;
     image.fromPixelMatrix(bmp);
     image.save("composite-rlamug.bmp");
-    cout<<"Saving composite image complete."<<endl;
+    cout<<" Saving composite image complete."<<endl;
 }
