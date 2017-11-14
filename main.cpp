@@ -16,81 +16,73 @@ using namespace std;
 //Prototypes:
 Bitmap userFile(string, int &userFiles); //Receives the user file and checks to see of it's valid
 vector <vector <Pixel> > pixelizeImage(Bitmap); //Converts user's image from bitmap to matrix of pixel
-vector <vector <Pixel> > addToFin(vector< vector <Pixel> >, vector <vector <Pixel> >); //Combine bmp matricies to final picture
-void avgFinal(vector< vector <Pixel> > &, int); //Takes final image and divides by amount of pictures there was
-void savePic(vector <vector <Pixel> >); //Saves matrix inputs as final composite image
+vector <vector <Pixel> > addToFin(vector< vector <Pixel> >, vector <vector <Pixel> >); //Combine bmp matrix to final picture
+void averageFinal(vector< vector <Pixel> > &, int); //Takes final image and divides by amount of pictures there was
+void savePicture(vector <vector <Pixel> >); //Saves matrix ineuts as final composite image
 
-int tenPics =10;
+int tenImages = 10;
 
 int main(){
     vector <vector <Pixel> > fin;
-    bool eqlSize = true;
+    bool equalSize = true;
     bool end = false;
-    int imgAmt = 0;
+    int imageAmount = 0;
 
     do{
         vector <vector <Pixel> > bmp;
         string pic;
-        if (imgAmt != tenPics)
+        if (imageAmount != tenImages)
         {
             cout<<" Enter file name: ";
             cin >> pic;
         }
-        if (pic == "DONE" )
-        {
-            end = true;
-        }
-        else if (pic == "done" )
-        {
-            end = true;
-        }
-        else if (imgAmt == 10)
+        if (pic == "DONE" || pic == "done" || imageAmount == 10)
         {
             end = true;
         }
         else {
-            bmp = pixelizeImage(userFile(pic, imgAmt));
-            if (imgAmt == 0)
+            bmp = pixelizeImage(userFile(pic, imageAmount));
+            if (imageAmount == 0)
             {
             fin = bmp;
             }
-            else if (imgAmt != 0)
+            else if (imageAmount != 0)
             {
                 fin = addToFin(fin, bmp);
             }
-            if(eqlSize == false)
+            if (equalSize == false)
             {
                 cout << "Error. Please try again.";
                 return 0;
             }
-            cout << " Picture " << imgAmt + 1 << " added to final picture. ";
-            imgAmt++;
+            cout << "Picture " << imageAmount + 1 << " added to final picture.";
+            imageAmount++;
         }
     }
     while (end == false);
-    if (imgAmt == 0)
+    if (imageAmount == 0)
     {
         cout << "No pictures recieved, please try again.";
     }
     else
     {
-        avgFinal (fin, imgAmt);
-        savePic(fin);
+        averageFinal (fin, imageAmount);
+        savePicture(fin);
     }
     return 0;
    }
-void avgFinal (vector <vector <Pixel> > &fin, int imgAmt)
+void averageFinal (vector <vector <Pixel> > &fin, int imageAmount)
 {
     Pixel rgb;
-    for (int k = 0; k < fin.size(); k++)
+    for (int h = 0; h < fin.size(); h++)
     {
-        for (int b =0; b < fin[k].size(); b++)
+        for (int i = 0; i < fin[h].size(); i++)
         {
-        rgb = fin[k][b];
-        rgb.red = rgb.red /imgAmt;
-        rgb.blue = rgb.blue /imgAmt;
-        rgb.green = rgb.green /imgAmt;
-        fin[k][b] = rgb;
+        rgb = fin[h][i];
+        rgb.red = rgb.red /imageAmount;
+        rgb.blue = rgb.blue /imageAmount;
+        rgb.green = rgb.green /imageAmount;
+        fin[h][i] = rgb;
         }
     }
 }
@@ -100,38 +92,38 @@ vector <vector <Pixel> >addToFin(vector <vector <Pixel> > fin, vector <vector <P
     Pixel rgb2;
     if (fin.size() != bmp.size() && fin[0].size() != bmp[0].size())
     {
-        cerr << "One or more bmp files have invalid dimensions";
+        cout << "One or more bmp files have invalid dimensions";
     }
     else
     {
-        for(int k = 0; k < fin.size(); k++)
+        for(int h = 0; h < fin.size(); h++)
         {
-            for (int b = 0; b < fin[k].size(); b++)
+            for (int i = 0; i < fin[h].size(); i++)
             {
-                rgb = bmp[k][b];
-                rgb2 = fin[k][b];
+                rgb = bmp[h][i];
+                rgb2 = fin[h][i];
                 rgb2.red = rgb.red + rgb2.red;
                 rgb2.blue = rgb.blue + rgb2.blue;
                 rgb2.green = rgb.green + rgb2.green;
-                fin[k][b] = rgb2;
+                fin[h][i] = rgb2;
              }
          }
          return fin;
     }
 }
-Bitmap userFile(string pic, int &imgAmt)
+Bitmap userFile(string pic, int &imageAmount)
 {
     Bitmap image;
     image.open(pic);
     bool validBmp = image.isImage();
     if (validBmp == true)
     {
-        cout << " File " <<imgAmt + 1 << " selected. ";
+        cout << " File " <<imageAmount + 1 << " selected. ";
         return image;
     }
     else if (validBmp == false)
     {
-        imgAmt--;
+        imageAmount--;
     }
 }
 vector <vector <Pixel> > pixelizeImage(Bitmap image)
@@ -140,7 +132,7 @@ vector <vector <Pixel> > pixelizeImage(Bitmap image)
     bmp = image.toPixelMatrix();
     return bmp;
 }
-void savePic(vector <vector <Pixel> > bmp)
+void savePicture (vector <vector <Pixel> > bmp)
 {
     Bitmap image;
     image.fromPixelMatrix(bmp);
